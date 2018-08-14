@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <groupId>com.github.apuex.pa</groupId>
+  <artifactId>pa</artifactId>
+  <version>1.0.0</version>
+  <packaging>pom</packaging>
+
+  <name>pa</name>
+  <description>pa</description>
+  <url>https://github.com/apuex/pa</url>
+
+  <licenses>
+    <license>
+      <name>MIT</name>
+      <url>https://mit-license.org/</url>
+      <distribution>repo</distribution>
+    </license>
+  </licenses>
+  <organization>
+    <name>com.github.apuex.pa</name>
+    <url>https://github.com/apuex/pa</url>
+  </organization>
+  <scm>
+    <url>https://github.com/apuex/pa.git</url>
+    <connection>scm:git@github.com:apuex/pa.git</connection>
+  </scm>
+  <developers>
+    <developer>
+      <id>sxjlinux</id>
+      <name>Sunxj</name>
+      <email>715763894@qq.com</email>
+      <url>https://github.com/sxjlinux</url>
+    </developer>
+    <developer>
+      <id>apuex</id>
+      <name>Wangxy</name>
+      <email>xtwxy@hotmail.com</email>
+      <url>https://github.com/apuex</url>
+    </developer>
+  </developers>
+
+  <modules>
+    <module>mhs</module>
+    <module>util</module>
+  </modules>
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>${maven-compiler-plugin.version}</version>
+        <configuration>
+          <source>${java.source.version}</source>
+          <target>${java.class.version}</target>
+          <encoding>${source.encoding}</encoding>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.sonatype.plugins</groupId>
+        <artifactId>nexus-staging-maven-plugin</artifactId>
+        <version>${nexus-staging-maven-plugin.version}</version>
+        <extensions>true</extensions>
+        <configuration>
+          <serverId>ossrh</serverId>
+          <nexusUrl>https://oss.sonatype.org/</nexusUrl>
+          <autoReleaseAfterClose>true</autoReleaseAfterClose>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-source-plugin</artifactId>
+        <version>${maven-source-plugin.version}</version>
+        <executions>
+          <execution>
+            <id>attach-sources</id>
+            <goals>
+              <goal>jar-no-fork</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-javadoc-plugin</artifactId>
+        <version>${maven-javadoc-plugin.version}</version>
+        <executions>
+          <execution>
+            <id>attach-javadocs</id>
+            <goals>
+              <goal>jar</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-gpg-plugin</artifactId>
+        <version>${maven-gpg-plugin.version}</version>
+        <executions>
+          <execution>
+            <id>sign-artifacts</id>
+            <phase>verify</phase>
+            <goals>
+              <goal>sign</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
+  <properties>
+    <java.source.version>1.8</java.source.version>
+    <java.class.version>1.8</java.class.version>
+    <source.encoding>UTF-8</source.encoding>
+    <junit.version>4.12</junit.version>
+
+    <maven-compiler-plugin.version>3.7.0</maven-compiler-plugin.version>
+    <maven-jar-plugin.version>3.1.0</maven-jar-plugin.version>
+    <maven-source-plugin.version>3.0.1</maven-source-plugin.version>
+    <maven-javadoc-plugin.version>3.0.1</maven-javadoc-plugin.version>
+    <maven-gpg-plugin.version>1.6</maven-gpg-plugin.version>
+
+    <nexus-staging-maven-plugin.version>1.6.8</nexus-staging-maven-plugin.version>
+
+  </properties>
+
+  <distributionManagement>
+    <snapshotRepository>
+      <id>ossrh</id>
+      <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+    </snapshotRepository>
+    <repository>
+      <id>ossrh</id>
+      <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+    </repository>
+  </distributionManagement>
+
+</project>
+
+       
