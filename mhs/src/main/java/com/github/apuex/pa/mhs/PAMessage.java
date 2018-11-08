@@ -1,9 +1,5 @@
 package com.github.apuex.pa.mhs;
-class PaMsg{
-	private int label;
-	private String msg;
-	private int priority;
-}
+
 public class PAMessage {
 	public static final int BASE =0;//告警原语
 	public static final int MHUINFOREQUEST=2;
@@ -27,8 +23,10 @@ public class PAMessage {
 	public static final int DATE_TIME = 20;//校时原语
 	public static final int SQL_EXC_STATUS = 21;//校时原语
 	public static final int FSU_STATUS = 22;//校时原语
-	public static final int MAXPAMessage = 27;//最大消息数
 	public static final int BINTERFACE_CONFIG_CHANGE = 26;//B接口配置修改同步
+	public static final int AI_HISDATA = 27;//写AI历史数据消息
+	public static final int DI_HISDATA = 28;//写DI历史数据消息
+	public static final int MAXPAMessage = 29;//最大消息数
 	public static final String PathName="_REAL_DATA_SERVER";
 	public static final String DestName="MHS_Input";
 	public static final int VERSION=0x11;
@@ -59,7 +57,9 @@ public class PAMessage {
 			5,//23
 			5,//24
 			5,//25
-			5//26
+			5,//26
+			5,//27
+			5//28
 	};
 	public static final String PAMHS[]={
 			"BASE",//0
@@ -88,6 +88,8 @@ public class PAMessage {
 			"",//23
 			"",//24
 			"",//25
-			"BINTERFACE_CONFIG_CHANGE"//26
+			"BINTERFACE_CONFIG_CHANGE",//26
+			"AI_HISDATA",//27
+			"DI_HISDATA",//28
 	};
 }

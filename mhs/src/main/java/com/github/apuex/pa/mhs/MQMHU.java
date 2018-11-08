@@ -1,27 +1,13 @@
 package com.github.apuex.pa.mhs;
 
-import java.net.InetAddress;
-
-import javax.jms.BytesMessage;
-import javax.jms.JMSException;
-import javax.jms.Message;
-import javax.jms.MessageListener;
-import javax.jms.Session;
-import javax.jms.TopicPublisher;
-import javax.jms.TopicSession;
-import javax.jms.TopicSubscriber;
-
+import com.github.apuex.pa.mhs.impl.*;
+import com.github.apuex.pa.utility.Utility;
 import com.sun.messaging.ConnectionConfiguration;
 import com.sun.messaging.Topic;
 import com.sun.messaging.jms.TopicConnection;
-import com.github.apuex.pa.mhs.impl.PAAlarm;
-import com.github.apuex.pa.mhs.impl.PAAlarmAckInfo;
-import com.github.apuex.pa.mhs.impl.PAConfigChange;
-import com.github.apuex.pa.mhs.impl.PADataRequest;
-import com.github.apuex.pa.mhs.impl.PADataRespond;
-import com.github.apuex.pa.mhs.impl.PAOperationReport;
-import com.github.apuex.pa.mhs.impl.PAOperationRequest;
-import com.github.apuex.pa.utility.Utility;
+
+import javax.jms.*;
+import java.net.InetAddress;
 
 public class MQMHU implements MessageListener {
 	private TopicConnection con;
@@ -114,7 +100,6 @@ public class MQMHU implements MessageListener {
 			写数据值原语：CPA_CLASS_OPERATION_REQUEST
 			CPAOperationRequest
 			 */
-			
 			switch(msgType){
 			case PAMessage.ALARM:
 				pPA=new PAAlarm();
@@ -152,6 +137,14 @@ public class MQMHU implements MessageListener {
 			case PAMessage.BINTERFACE_CONFIG_CHANGE:
 				//System.out.println("配置修改");
 				pPA=new PAConfigChange();
+				break;
+			case PAMessage.AI_HISDATA:
+				//System.out.println("AI历史数据");
+				pPA=new PAAiHisData();
+				break;
+			case PAMessage.DI_HISDATA:
+				//System.out.println("DI历史数据");
+				pPA=new PADiHisData();
 				break;
 			default:
 				break;
