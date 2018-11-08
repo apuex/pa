@@ -21,6 +21,7 @@
   <modules>
     <module>mhs</module>
     <module>util</module>
+    <module>spring</module>
   </modules>
 
 </project>
