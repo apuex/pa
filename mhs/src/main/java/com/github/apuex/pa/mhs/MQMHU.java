@@ -133,6 +133,7 @@ public class MQMHU implements MessageListener {
 				break;
 			case PAMessage.USER_SQL_TEXT:
 				//System.out.println("写库原语");
+				pPA=new PAUserSQL();
 				break;
 			case PAMessage.BINTERFACE_CONFIG_CHANGE:
 				//System.out.println("配置修改");
