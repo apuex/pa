@@ -71,6 +71,7 @@ public class PAMessageConverter {
         //System.out.println("校时原语");
         break;
       case PAMessage.USER_SQL_TEXT:
+        pPA=new PAUserSQL();
         //System.out.println("写库原语");
         break;
       case PAMessage.BINTERFACE_CONFIG_CHANGE:
