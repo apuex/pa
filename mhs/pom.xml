@@ -5,13 +5,13 @@
 
   <groupId>com.github.apuex.pa</groupId>
   <artifactId>pa-mhs</artifactId>
-  <version>1.0.2</version>
+  <version>1.0.3</version>
   <packaging>jar</packaging>
 
   <parent>
     <groupId>com.github.apuex.pa</groupId>
     <artifactId>pa</artifactId>
-    <version>1.0.2</version>
+    <version>1.0.3</version>
   </parent>
 
   <dependencies>
