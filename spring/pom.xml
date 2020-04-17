@@ -11,7 +11,7 @@
   <parent>
     <groupId>com.github.apuex.pa</groupId>
     <artifactId>pa</artifactId>
-    <version>1.0.0</version>
+    <version>1.0.2</version>
   </parent>
 
   <dependencies>
@@ -60,7 +60,7 @@
     <dependency>
       <groupId>com.github.apuex.pa</groupId>
       <artifactId>pa-mhs</artifactId>
-      <version>1.0.1</version>
+      <version>1.0.2</version>
       <scope>compile</scope>
     </dependency>
   </dependencies>
