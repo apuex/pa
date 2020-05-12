@@ -50,6 +50,7 @@ public class PAMessageConverter {
         break;
       case PAMessage.ALARM_REQUEST:
         //System.out.println("告警请求原语");
+        pPA=new PABase();
         break;
       case PAMessage.DATA_RESPOND:
         pPA=new PADataRespond();
@@ -67,8 +68,21 @@ public class PAMessageConverter {
         pPA=new PAOperationReport();
         //System.out.println("数据请求原语");
         break;
+      case PAMessage.CONFIG_CHANGE:
+        pPA=new PAConfigChange();
+        //System.out.println("配置修改");
+        break;
+      case PAMessage.DATA_OBJECT_CHANGE:
+      case PAMessage.MHUSTATUS_REPORT:
+      case PAMessage.SQL_EXC_STATUS:
+      case PAMessage.MHUINFOREQUEST:
+      case PAMessage.BASE:
+      case PAMessage.FSU_STATUS:
+      case PAMessage.RAWIO:
+      case PAMessage.RAWIO_RESULT:
       case PAMessage.DATE_TIME:
         //System.out.println("校时原语");
+        pPA=new PABase();
         break;
       case PAMessage.USER_SQL_TEXT:
         pPA=new PAUserSQL();
@@ -87,7 +101,8 @@ public class PAMessageConverter {
         pPA=new PADiHisData();
         break;
       default:
-        throw new RuntimeException("Un supported message type: " + msgType);
+        pPA=new PABase();
+        System.out.println("Un supported message type: " + msgType);
     }
     pPA.byteToClass(b);
     return pPA;
