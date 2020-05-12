@@ -68,11 +68,11 @@ public class PAMessageConverter {
         pPA=new PAOperationReport();
         //System.out.println("数据请求原语");
         break;
+      case PAMessage.DATA_OBJECT_CHANGE:
       case PAMessage.CONFIG_CHANGE:
         pPA=new PAConfigChange();
         //System.out.println("配置修改");
         break;
-      case PAMessage.DATA_OBJECT_CHANGE:
       case PAMessage.MHUSTATUS_REPORT:
       case PAMessage.SQL_EXC_STATUS:
       case PAMessage.MHUINFOREQUEST:
@@ -81,6 +81,7 @@ public class PAMessageConverter {
       case PAMessage.RAWIO:
       case PAMessage.RAWIO_RESULT:
       case PAMessage.DATE_TIME:
+        System.out.println("default to PABase, message type: " + msgType);
         //System.out.println("校时原语");
         pPA=new PABase();
         break;
@@ -89,6 +90,7 @@ public class PAMessageConverter {
         //System.out.println("写库原语");
         break;
       case PAMessage.BINTERFACE_CONFIG_CHANGE:
+        System.out.println("BINTERFACE_CONFIG_CHANGE default to PABase, message type: " + msgType);
         //System.out.println("配置修改");
         pPA=new PAConfigChange();
         break;

@@ -5,7 +5,7 @@
 
   <groupId>com.github.apuex.pa</groupId>
   <artifactId>pa-spring</artifactId>
-  <version>1.0.3</version>
+  <version>1.0.4</version>
   <packaging>jar</packaging>
 
   <parent>
@@ -60,7 +60,7 @@
     <dependency>
       <groupId>com.github.apuex.pa</groupId>
       <artifactId>pa-mhs</artifactId>
-      <version>1.0.3</version>
+      <version>1.0.4</version>
       <scope>compile</scope>
     </dependency>
   </dependencies>
