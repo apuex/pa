@@ -107,4 +107,28 @@ public class PAOperationReport extends PABase {
 	public int getPriority(){
 		return this.priority;
 	}
+
+	public long getRiseTime() {
+		return RiseTime;
+	}
+
+	public int getDwOpId() {
+		return dwOpId;
+	}
+
+	public int getSessionState() {
+		return SessionState;
+	}
+
+	public int getSessionResult() {
+		return SessionResult;
+	}
+
+	public String getDescription() {
+		return Description;
+	}
+
+	public String getUserName() {
+		return UserName;
+	}
 }
