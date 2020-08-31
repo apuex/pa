@@ -134,4 +134,8 @@ public class PAAlarmAckInfo extends PABase {
 	public int getMessageStatus(){
 		return this.dwMessageStatus;
 	}
+
+	public short getType() {
+		return this.type;
+	}
 }
