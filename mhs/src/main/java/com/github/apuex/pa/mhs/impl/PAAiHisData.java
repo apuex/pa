@@ -4,19 +4,19 @@ import com.github.apuex.pa.mhs.PABase;
 import com.github.apuex.pa.mhs.PAMessage;
 import com.github.apuex.pa.utility.Utility;
 
-public class PAAiHisData extends PABase {
+public class PAAiHisData implements PABase {
 	private int priority;//
 	private short type;//2
 	private short version;//2
 	private short periodType;//0表示天，1表示小时，2表示15分钟
 	private int   dwID;//4
 	private long RecordTime;
-	private float RecordValue;
+	private double RecordValue;
 	private long MaxRecordTime;
-	private float MaxRecordValue;
+	private double MaxRecordValue;
 	private long MinRecordTime;
-	private float MinRecordValue;
-	private float AvgRecordValue;
+	private double MinRecordValue;
+	private double AvgRecordValue;
 	public PAAiHisData(){
 		priority=PAMessage.Priority[PAMessage.AI_HISDATA];
 		type=PAMessage.AI_HISDATA;
@@ -49,10 +49,10 @@ public class PAAiHisData extends PABase {
 	public void setRecordTime(long RecordTime) {
 		this.RecordTime=RecordTime;
 	}
-	public float getRecordValue() {
+	public double getRecordValue() {
 		return this.RecordValue;
 	}
-	public void setRecordValue(float RecordValue) {
+	public void setRecordValue(double RecordValue) {
 		this.RecordValue=RecordValue;
 	}
 	public long getMaxRecordTime() {
@@ -61,10 +61,10 @@ public class PAAiHisData extends PABase {
 	public void setMaxRecordTime(long MaxRecordTime) {
 		this.MaxRecordTime=MaxRecordTime;
 	}
-	public float getMaxRecordValue() {
+	public double getMaxRecordValue() {
 		return this.MaxRecordValue;
 	}
-	public void setMaxRecordValue(float MaxRecordValue) {
+	public void setMaxRecordValue(double MaxRecordValue) {
 		this.MaxRecordValue=MaxRecordValue;
 	}
 	
@@ -74,16 +74,16 @@ public class PAAiHisData extends PABase {
 	public void setMinRecordTime(long MinRecordTime) {
 		this.MinRecordTime=MinRecordTime;
 	}
-	public float getMinRecordValue() {
+	public double getMinRecordValue() {
 		return this.MinRecordValue;
 	}
-	public void setMinRecordValue(float MinRecordValue) {
+	public void setMinRecordValue(double MinRecordValue) {
 		this.MinRecordValue=MinRecordValue;
 	}
-	public float getAvgRecordValue() {
+	public double getAvgRecordValue() {
 		return this.AvgRecordValue;
 	}
-	public void setAvgRecordValue(float AvgRecordValue) {
+	public void setAvgRecordValue(double AvgRecordValue) {
 		this.AvgRecordValue=AvgRecordValue;
 	}
 	
@@ -111,20 +111,20 @@ public class PAAiHisData extends PABase {
 		index+=2;
 		this.dwID=Utility.byteToint(b, index);
 		index+=4;
-		this.RecordTime=Utility.byteTolong(b, index);
-		index+=4;
-		this.RecordValue=Utility.byteTofloat(b, index);
-		index+=4;
-		this.MaxRecordTime=Utility.byteTolong(b, index);
-		index+=4;
-		this.MaxRecordValue=Utility.byteTofloat(b, index);
-		index+=4;
-		this.MinRecordTime=Utility.byteTolong(b, index);
-		index+=4;
-		this.MinRecordValue=Utility.byteTofloat(b, index);
-		index+=4;
-		this.AvgRecordValue=Utility.byteTofloat(b, index);
-		index+=4;
+		this.RecordTime=Utility.byteToTime(b, index);
+		index+=8;
+		this.RecordValue=Utility.byteTodouble(b, index);
+		index+=8;
+		this.MaxRecordTime=Utility.byteToTime(b, index);
+		index+=8;
+		this.MaxRecordValue=Utility.byteTodouble(b, index);
+		index+=8;
+		this.MinRecordTime=Utility.byteToTime(b, index);
+		index+=8;
+		this.MinRecordValue=Utility.byteTodouble(b, index);
+		index+=8;
+		this.AvgRecordValue=Utility.byteTodouble(b, index);
+		index+=8;
 	}
 	public int getClassLen(){
 		int len=0;
@@ -132,13 +132,13 @@ public class PAAiHisData extends PABase {
 		len+=2;//version
 		len+=2;//periodType
 		len+=4;//dwID
-		len+=4;//RecordTime
-		len+=4;//RecordValue
-		len+=4;//MaxRecordTime
-		len+=4;//MaxRecordValue
-		len+=4;//MinRecordTime
-		len+=4;//MinRecordValue
-		len+=4;//AvgRecordValue
+		len+=8;//RecordTime
+		len+=8;//RecordValue
+		len+=8;//MaxRecordTime
+		len+=8;//MaxRecordValue
+		len+=8;//MinRecordTime
+		len+=8;//MinRecordValue
+		len+=8;//AvgRecordValue
 		return len;
 	}
 	public byte [] classToByte(){
@@ -148,13 +148,13 @@ public class PAAiHisData extends PABase {
 		index+=Utility.shortTobyte(b, index, this.version);
 		index+=Utility.shortTobyte(b, index, this.periodType);
 		index+=Utility.intTobyte(b, index, this.dwID);
-		index+=Utility.longTobyte(b, index, this.RecordTime);
-		index+=Utility.floatTobyte(b, index, this.RecordValue);
-		index+=Utility.longTobyte(b, index, this.MaxRecordTime);
-		index+=Utility.floatTobyte(b, index, this.MaxRecordValue);
-		index+=Utility.longTobyte(b, index, this.MinRecordTime);
-		index+=Utility.floatTobyte(b, index, this.MinRecordValue);
-		index+=Utility.floatTobyte(b, index, this.AvgRecordValue);
+		index+=Utility.timeToByte(b, index, this.RecordTime);
+		index+=Utility.doubleTobyte(b, index, this.RecordValue);
+		index+=Utility.timeToByte(b, index, this.MaxRecordTime);
+		index+=Utility.doubleTobyte(b, index, this.MaxRecordValue);
+		index+=Utility.timeToByte(b, index, this.MinRecordTime);
+		index+=Utility.doubleTobyte(b, index, this.MinRecordValue);
+		index+=Utility.doubleTobyte(b, index, this.AvgRecordValue);
 		return b;
 	}
 }

@@ -1,17 +1,17 @@
 package com.github.apuex.pa.mhs.impl;
 public class AIHistoryValue {
-	private int time=0;
-	private float fValue=0;
-	public void setTime(int time){
+	private long time=0;
+	private double fValue=0;
+	public void setTime(long time){
 		this.time=time;
 	}
-	public void setFValue(float fValue){
+	public void setFValue(double fValue){
 		this.fValue=fValue;
 	}
-	public int getTime(){
+	public long getTime(){
 		return this.time;
 	}
-	public float getFValue(){
+	public double getFValue(){
 		return this.fValue;
 	}
 }

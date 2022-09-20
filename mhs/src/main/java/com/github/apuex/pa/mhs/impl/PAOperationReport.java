@@ -4,7 +4,7 @@ import com.github.apuex.pa.mhs.PABase;
 import com.github.apuex.pa.mhs.PAMessage;
 import com.github.apuex.pa.utility.Utility;
 
-public class PAOperationReport extends PABase {
+public class PAOperationReport implements PABase {
 	private int priority;//
 	private short type;//2
 	private short version;//2
@@ -41,18 +41,18 @@ public class PAOperationReport extends PABase {
 		int len=0;
 		len+=2;//type
 		len+=2;//version
-		len+=4;//时间
+		len+=8;//时间
 		len+=4;//id
 		len+=4;//SessionState
 		len+=4;//SessionResult
 		len+=4;//描述字符长度
-		len+=Utility.getStringGBKLen(this.Description);
-		if(Utility.getStringGBKLen(this.Description)>0){
+		len+=Utility.getStringGB18030Len(this.Description);
+		if(Utility.getStringGB18030Len(this.Description)>0){
 			len+=1;
 		}
 		len+=4;//用户名字符长度
-		len+=Utility.getStringGBKLen(this.UserName);
-		if(Utility.getStringGBKLen(this.UserName)>0){
+		len+=Utility.getStringGB18030Len(this.UserName);
+		if(Utility.getStringGB18030Len(this.UserName)>0){
 			len+=1;
 		}
 		return len;
@@ -62,13 +62,13 @@ public class PAOperationReport extends PABase {
 		int index=0;
 		index+=Utility.shortTobyte(b, index, this.type);
 		index+=Utility.shortTobyte(b, index, this.version);
-		index+=Utility.longTobyte(b, index, this.RiseTime);
+		index+=Utility.timeToByte(b, index, this.RiseTime);
 		index+=Utility.intTobyte(b, index, this.dwOpId);
 		index+=Utility.intTobyte(b, index, this.SessionState);
 		index+=Utility.intTobyte(b, index, this.SessionResult);
-		index+=Utility.intTobyte(b, index,Utility.getStringGBKLen(this.Description));
+		index+=Utility.intTobyte(b, index,Utility.getStringGB18030Len(this.Description));
 		index+=Utility.strTobytePA(b, index, this.Description);
-		index+=Utility.intTobyte(b, index,Utility.getStringGBKLen(this.UserName));
+		index+=Utility.intTobyte(b, index,Utility.getStringGB18030Len(this.UserName));
 		index+=Utility.strTobytePA(b, index, this.UserName);
 		return b;
 	}
@@ -77,8 +77,8 @@ public class PAOperationReport extends PABase {
 		int len=0;
 		this.version=Utility.byteToshort(b, index);
 		index+=2;
-		this.RiseTime=Utility.byteToint(b, index);
-		index+=4;
+		this.RiseTime=Utility.byteToTime(b, index);
+		index+=8;
 		this.dwOpId=Utility.byteToint(b, index);
 		index+=4;
 		this.SessionState=Utility.byteToint(b, index);

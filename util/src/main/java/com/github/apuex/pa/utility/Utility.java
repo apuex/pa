@@ -2,6 +2,9 @@ package com.github.apuex.pa.utility;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
+import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.sql.Timestamp;
 import java.text.ParseException;
@@ -13,14 +16,14 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 
 public class Utility {
-	public static byte[] float2byte(float f) {
-		// 把float转换为byte[]
-		int fbit = Float.floatToIntBits(f);
-		
-		byte[] b = new byte[4];  
-	    for (int i = 0; i < 4; i++) {  
-	        b[i] = (byte) (fbit >> (24 - i * 8));  
-	    } 
+	public static byte[] double2byte(double f) {
+		// 把double转换为byte[]
+		long fbit = Double.doubleToLongBits(f);
+
+		byte[] b = new byte[8];
+		for (int i = 0; i < 8; i++) {
+			b[i] = (byte) (fbit >> (24 - i * 8));
+		}
 	    
 	    // 翻转数组
 		int len = b.length;
@@ -38,31 +41,12 @@ public class Utility {
 	    
 	    return dest;  
 	}
-	public static int floatTobyte(byte b[],int index,float f) {
-		// 把float转换为byte[]
-		int fbit = Float.floatToIntBits(f);
-		byte[] b1 = new byte[4];  
-	    for (int i = 0; i < 4; i++) {  
-	        b1[i] = (byte) (fbit >> (24 - i * 8));  
-	    } 
-	    //翻转数组
-		int len = b1.length;
-		//建立一个与源数组元素类型相同的数组
-		byte[] dest = new byte[len];
-		//为了防止修改源数组，将源数组拷贝一份副本
-		System.arraycopy(b1, 0, dest, 0, len);
-		byte temp;
-		// 将顺位第i个与倒数第i个交换
-		for (int i = 0; i < len / 2; ++i) {
-			temp = dest[i];
-			dest[i] = dest[len - i - 1];
-			dest[len - i - 1] = temp;
-		}
-		b[index]=dest[0];
-		b[index+1]=dest[1];
-		b[index+2]=dest[2];
-		b[index+3]=dest[3];
-		return 4;
+	public static int doubleTobyte(byte b[],int index,double f) {
+		ByteBuffer bf = ByteBuffer.wrap(b).order(ByteOrder.LITTLE_ENDIAN);
+		bf.position(index);
+		bf.putDouble(f);
+		final int pos = bf.position();
+		return (pos - index);
 	}
 	
 	/**
@@ -72,16 +56,10 @@ public class Utility {
 	 * @param index 开始位置
 	 * @return
 	 */
-	public static float byteTofloat(byte[] b, int index) {  
-	    int l;                                           
-	    l = b[index + 0];                                
-	    l &= 0xff;                                       
-	    l |= ((long) b[index + 1] << 8);                 
-	    l &= 0xffff;                                     
-	    l |= ((long) b[index + 2] << 16);                
-	    l &= 0xffffff;                                   
-	    l |= ((long) b[index + 3] << 24);                
-	    return Float.intBitsToFloat(l);                  
+	public static double byteTodouble(byte[] b, int index) {
+		ByteBuffer bf = ByteBuffer.wrap(b).order(ByteOrder.LITTLE_ENDIAN);
+		bf.position(index);
+		return bf.getDouble();
 	}
 	
 	/**
@@ -149,13 +127,26 @@ public class Utility {
 		b[index+3]=(byte)((v>>24)&0xFF);  
 		return 4;
 	}
-	/**
-	 * 字节转换为short
-	 * 
-	 * @param b 字节（至少2个字节）
-	 * @param index 开始位置
-	 * @return
-	 */
+
+	public static long byteToTime(byte[] b, int index) {
+		ByteBuffer bf = ByteBuffer.wrap(b).order(ByteOrder.LITTLE_ENDIAN);
+		bf.position(index);
+		return bf.getLong();
+	}
+	public static int timeToByte(byte b[],int index,long v) {
+		ByteBuffer bf = ByteBuffer.wrap(b).order(ByteOrder.LITTLE_ENDIAN);
+		bf.position(index);
+		bf.putLong(v);
+		final int pos = bf.position();
+		return (pos - index);
+	}
+		/**
+     * 字节转换为short
+     *
+     * @param b 字节（至少2个字节）
+     * @param index 开始位置
+     * @return
+     */
 	public static short byteToshort(byte[] b, int index) {  
 		short l=0;                                           
 	    l = b[index + 0];                                
@@ -183,12 +174,12 @@ public class Utility {
 				bstr[i]=b[index+i];
 			}
 			try {
-				str=new String(bstr,"GBK");
+				str=new String(bstr, "GB18030");
 			} catch (UnsupportedEncodingException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			str=getUTF8StringFromGBKString(str);
+			str=getUTF8StringFromGB18030String(str);
 		}
 		return str.trim();
 	}
@@ -200,23 +191,23 @@ public class Utility {
 				bstr[i]=b[index+i];
 			}
 			try {
-				str=new String(bstr,"GBK");
+				str=new String(bstr,"GB18030");
 			} catch (UnsupportedEncodingException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			str=getUTF8StringFromGBKString(str);
+			str=getUTF8StringFromGB18030String(str);
 		}
 		return str.trim();
 	}
-	public static String getUTF8StringFromGBKString(String gbkStr) {  
+	public static String getUTF8StringFromGB18030String(String gbkStr) {  
 		try {  
-				return new String(getUTF8BytesFromGBKString(gbkStr), "UTF-8");  
+				return new String(getUTF8BytesFromGB18030String(gbkStr), "UTF-8");  
 			} catch (UnsupportedEncodingException e) {  
 				throw new InternalError();  
 		}  
 	}
-	public static byte[] getUTF8BytesFromGBKString(String gbkStr) {  
+	public static byte[] getUTF8BytesFromGB18030String(String gbkStr) {  
 		int n = gbkStr.length();  
 		byte[] utfBytes = new byte[3 * n];  
 		int k = 0;  
@@ -243,7 +234,7 @@ public class Utility {
 		int len=0;
 		if(str.length()>0){
 			try {
-				byte bstr[] = str.getBytes("GBK");
+				byte bstr[] = str.getBytes("GB18030");
 				for(int i=0;i<bstr.length;i++){
 					b[index+i]=bstr[i];
 				}
@@ -259,7 +250,7 @@ public class Utility {
 		int len=0;
 		if(str.length()>0){
 			try {
-				byte bstr[] = str.getBytes("GBK");
+				byte bstr[] = str.getBytes("GB18030");
 				
 				for(int i=0;i<bstr.length;i++){
 					b[index+i]=bstr[i];
@@ -273,10 +264,26 @@ public class Utility {
 		}
 		return len;
 	}
+
+	public static String gb18030ByteToStr(byte[] bytes) {
+		try {
+			return new String(bytes, "GB18030");
+		} catch (Throwable t) {
+			throw new RuntimeException(t);
+		}
+	}
+	public static byte[] strToGB18030Byte(String str) {
+		try{
+			byte bstr[] = str.getBytes("GB18030");
+			return bstr;
+		} catch (Throwable t) {
+			throw new RuntimeException(t);
+		}
+	}
 	public static int strTobyte(byte[] b, int index,String str,int len){
 		if(str.length()>0){
 			try {
-				byte bstr[] = str.getBytes("GBK");
+				byte bstr[] = str.getBytes("GB18030");
 				if(bstr.length<len){
 					for(int i=0;i<bstr.length;i++){
 						b[index+i]=bstr[i];
@@ -296,11 +303,11 @@ public class Utility {
 		}
 		return len;
 	}
-	public static int getStringGBKLen(String str){
+	public static int getStringGB18030Len(String str){
 		int len=0;
 		if(str.length()>0){
 			try {
-				len=str.getBytes("GBK").length;
+				len=str.getBytes("GB18030").length;
 			} catch (UnsupportedEncodingException e) {
 				e.printStackTrace();
 			}

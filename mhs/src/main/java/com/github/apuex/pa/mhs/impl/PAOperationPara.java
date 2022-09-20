@@ -8,7 +8,7 @@ public class PAOperationPara {
 	private short version;//2
 	private int nType;//1: TRUN OFF£¬ 2:  TURN ON   3:  STRIKE  4£º¸¡µãÖµ£¬ 5£º×Ö·û´®
 	private int	nDelay;//延时
-	private float fValue;//浮点值
+	private double fValue;//浮点值
 	private String szValue;//字符值
 	public PAOperationPara(){
 		this.type=PAMessage.OPERATION_PARA;
@@ -24,7 +24,7 @@ public class PAOperationPara {
 	public void setNDelay(int nDelay){
 		this.nDelay=nDelay;
 	}
-	public void setFValue(float fValue){
+	public void setFValue(double fValue){
 		this.fValue=fValue;
 	}
 	public void setSZValue(String szValue){
@@ -42,7 +42,7 @@ public class PAOperationPara {
 	public int getNDelay(){
 		return this.nDelay;
 	}
-	public float getFValue(){
+	public double getFValue(){
 		return this.fValue;
 	}
 	public String getSZValue(){
@@ -56,8 +56,8 @@ public class PAOperationPara {
 		len+=4;//nDelay
 		len+=4;//fValue
 		len+=4;//字符长度
-		len+=Utility.getStringGBKLen(this.szValue);
-		if(Utility.getStringGBKLen(this.szValue)>0){
+		len+=Utility.getStringGB18030Len(this.szValue);
+		if(Utility.getStringGB18030Len(this.szValue)>0){
 			len+=1;
 		}
 		return len;

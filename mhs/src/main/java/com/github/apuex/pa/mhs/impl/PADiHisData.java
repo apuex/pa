@@ -5,7 +5,7 @@ import com.github.apuex.pa.mhs.PABase;
 import com.github.apuex.pa.mhs.PAMessage;
 import com.github.apuex.pa.utility.Utility;
 
-public class PADiHisData extends PABase {
+public class PADiHisData implements PABase {
 	private int priority;//
 	private short type;//2
 	private short version;//2
@@ -70,8 +70,8 @@ public class PADiHisData extends PABase {
 		index+=2;
 		this.dwID=Utility.byteToint(b, index);
 		index+=4;
-		this.RecordTime=Utility.byteTolong(b, index);
-		index+=4;
+		this.RecordTime=Utility.byteToTime(b, index);
+		index+=8;
 		this.RecordValue=Utility.byteToint(b, index);
 		index+=4;
 	}
@@ -81,7 +81,7 @@ public class PADiHisData extends PABase {
 		len+=2;//version
 		len+=2;//periodType
 		len+=4;//dwID
-		len+=4;//RecordTime
+		len+=8;//RecordTime
 		len+=4;//RecordValue
 		return len;
 	}
@@ -92,7 +92,7 @@ public class PADiHisData extends PABase {
 		index+=Utility.shortTobyte(b, index, this.version);
 		index+=Utility.shortTobyte(b, index, this.periodType);
 		index+=Utility.intTobyte(b, index, this.dwID);
-		index+=Utility.longTobyte(b, index, this.RecordTime);
+		index+=Utility.timeToByte(b, index, this.RecordTime);
 		index+=Utility.intTobyte(b, index, this.RecordValue);
 		return b;
 	}

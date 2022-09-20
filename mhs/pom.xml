@@ -5,7 +5,7 @@
 
   <groupId>com.github.apuex.pa</groupId>
   <artifactId>pa-mhs</artifactId>
-  <version>1.0.4</version>
+  <version>1.0.5</version>
   <packaging>jar</packaging>
 
   <parent>
@@ -24,6 +24,7 @@
       <groupId>org.glassfish.mq</groupId>
       <artifactId>imq</artifactId>
       <version>5.1</version>
+      <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>junit</groupId>

@@ -50,7 +50,6 @@ public class PAMessageConverter {
         break;
       case PAMessage.ALARM_REQUEST:
         //System.out.println("告警请求原语");
-        pPA=new PABase();
         break;
       case PAMessage.DATA_RESPOND:
         pPA=new PADataRespond();
@@ -83,7 +82,6 @@ public class PAMessageConverter {
       case PAMessage.DATE_TIME:
         System.out.println("default to PABase, message type: " + msgType);
         //System.out.println("校时原语");
-        pPA=new PABase();
         break;
       case PAMessage.USER_SQL_TEXT:
         pPA=new PAUserSQL();
@@ -103,10 +101,9 @@ public class PAMessageConverter {
         pPA=new PADiHisData();
         break;
       default:
-        pPA=new PABase();
         System.out.println("Un supported message type: " + msgType);
     }
-    pPA.byteToClass(b);
+    if(null != pPA) pPA.byteToClass(b);
     return pPA;
   }
 

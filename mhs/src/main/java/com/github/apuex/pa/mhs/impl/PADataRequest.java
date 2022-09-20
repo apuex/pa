@@ -9,7 +9,7 @@ import com.github.apuex.pa.mhs.PABase;
 import com.github.apuex.pa.mhs.PAMessage;
 import com.github.apuex.pa.utility.Utility;
 
-public class PADataRequest extends PABase {
+public class PADataRequest implements PABase {
 	private int priority;
 	private short type;
 	private short version;

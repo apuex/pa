@@ -2,7 +2,7 @@ package com.github.apuex.pa.mhs.impl;
 
 public class PAAIDataValue {
 	private long tTime;
-	private float fValue;
+	private double fValue;
 	public PAAIDataValue(){
 		tTime=0;
 		fValue=0;
@@ -13,7 +13,7 @@ public class PAAIDataValue {
 	public long getTime(){
 		return this.tTime;
 	}
-	public void setFValue(float value){
+	public void setFValue(double value){
 		this.fValue=value;
 	}
 	public double getFValue(){

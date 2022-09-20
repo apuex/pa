@@ -4,7 +4,7 @@ import com.github.apuex.pa.mhs.PABase;
 import com.github.apuex.pa.mhs.PAMessage;
 import com.github.apuex.pa.utility.Utility;
 
-public class PAAlarmAckInfo extends PABase {
+public class PAAlarmAckInfo implements PABase {
 	private int priority;//
 	private short type;//2
 	private short version;//2
@@ -60,14 +60,14 @@ public class PAAlarmAckInfo extends PABase {
 		index+=2;
 		this.dwID=Utility.byteToint(b, index);//dwID
 		index+=4;
-		this.RiseTime=Utility.byteToint(b, index);//
-		index+=4;
+		this.RiseTime=Utility.byteToTime(b, index);//
+		index+=8;
 		this.nACK=Utility.byteToint(b, index);//
 		index+=4;
 		this.Repair=Utility.byteToint(b, index);//
 		index+=4;
-		this.conf_time=Utility.byteToint(b, index);//
-		index+=4;
+		this.conf_time=Utility.byteToTime(b, index);//
+		index+=8;
 		this.dwUserID=Utility.byteToint(b, index);//
 		index+=4;
 		this.dwMessageStatus=Utility.byteToint(b, index);//
@@ -81,14 +81,14 @@ public class PAAlarmAckInfo extends PABase {
 		len+=2;//type
 		len+=2;//version
 		len+=4;//id
-		len+=4;//RiseTime
+		len+=8;//RiseTime
 		len+=4;//nACK
 		len+=4;//Repair
-		len+=4;//conf_time
+		len+=8;//conf_time
 		len+=4;//dwUserID
 		len+=4;//dwMessageStatus
 		len+=4;//strLen
-		int l=Utility.getStringGBKLen(this.strUsername);//strUsername
+		int l=Utility.getStringGB18030Len(this.strUsername);//strUsername
 		if(l>0){
 			len+=l+1;
 		}
@@ -100,13 +100,13 @@ public class PAAlarmAckInfo extends PABase {
 		index+=Utility.shortTobyte(b, index, this.type);
 		index+=Utility.shortTobyte(b, index, this.version);
 		index+=Utility.intTobyte(b, index, this.dwID);
-		index+=Utility.longTobyte(b, index, this.RiseTime);
+		index+=Utility.timeToByte(b, index, this.RiseTime);
 		index+=Utility.intTobyte(b, index, this.nACK);
 		index+=Utility.intTobyte(b, index, this.Repair);
-		index+=Utility.longTobyte(b, index, this.conf_time);
+		index+=Utility.timeToByte(b, index, this.conf_time);
 		index+=Utility.intTobyte(b, index,this.dwUserID);
 		index+=Utility.intTobyte(b, index,this.dwMessageStatus);
-		index+=Utility.intTobyte(b, index, Utility.getStringGBKLen(this.strUsername));
+		index+=Utility.intTobyte(b, index, Utility.getStringGB18030Len(this.strUsername));
 		index+=Utility.strTobytePA(b, index, this.strUsername);
 		return b;
 	}
@@ -137,5 +137,15 @@ public class PAAlarmAckInfo extends PABase {
 
 	public short getType() {
 		return this.type;
+	}
+
+	@Override
+	public short getVersion() {
+		return 0;
+	}
+
+	@Override
+	public int getPriority() {
+		return 0;
 	}
 }

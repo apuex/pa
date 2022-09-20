@@ -3,7 +3,7 @@ import com.github.apuex.pa.mhs.PABase;
 import com.github.apuex.pa.mhs.PAMessage;
 import com.github.apuex.pa.utility.Utility;
 
-public class PAOperationRequest extends PABase {
+public class PAOperationRequest implements PABase {
 	private int priority;//
 	private short type;//2
 	private short version;//2
@@ -47,8 +47,8 @@ public class PAOperationRequest extends PABase {
 		len+=2;//version
 		len+=4;//id
 		len+=4;//用户字符长度
-		len+=Utility.getStringGBKLen(this.szUserName);
-		if(Utility.getStringGBKLen(this.szUserName)>0){
+		len+=Utility.getStringGB18030Len(this.szUserName);
+		if(Utility.getStringGB18030Len(this.szUserName)>0){
 			len+=1;
 		}
 		len+=4;//opType
@@ -63,9 +63,9 @@ public class PAOperationRequest extends PABase {
 		index+=Utility.shortTobyte(b, index, this.type);
 		index+=Utility.shortTobyte(b, index, this.version);
 		index+=Utility.intTobyte(b, index, this.dwOpId);
-		index+=Utility.intTobyte(b, index,Utility.getStringGBKLen(this.szUserName));
+		index+=Utility.intTobyte(b, index,Utility.getStringGB18030Len(this.szUserName));
 		index+=Utility.strTobytePA(b, index, this.szUserName);
-		/*if(Utility.getStringGBKLen(this.szUserName)>0){
+		/*if(Utility.getStringGB18030Len(this.szUserName)>0){
 			index+=1;
 			b[index]=0x00;
 		}*/
@@ -75,10 +75,10 @@ public class PAOperationRequest extends PABase {
 		index+=Utility.shortTobyte(b, index, this.opPara1.getVersion());
 		index+=Utility.intTobyte(b, index,this.opPara1.getNType());
 		index+=Utility.intTobyte(b, index,this.opPara1.getNDelay());
-		index+=Utility.floatTobyte(b, index, this.opPara1.getFValue());
-		index+=Utility.intTobyte(b, index,Utility.getStringGBKLen(this.opPara1.getSZValue()));
+		index+=Utility.doubleTobyte(b, index, this.opPara1.getFValue());
+		index+=Utility.intTobyte(b, index,Utility.getStringGB18030Len(this.opPara1.getSZValue()));
 		index+=Utility.strTobytePA(b, index, this.opPara1.getSZValue());
-		/*if(Utility.getStringGBKLen(this.opPara1.getSZValue())>0){
+		/*if(Utility.getStringGB18030Len(this.opPara1.getSZValue())>0){
 			index+=1;
 			b[index]=0x00;
 		}*/
@@ -86,10 +86,10 @@ public class PAOperationRequest extends PABase {
 		index+=Utility.shortTobyte(b, index, this.opPara2.getVersion());
 		index+=Utility.intTobyte(b, index,this.opPara2.getNType());
 		index+=Utility.intTobyte(b, index,this.opPara2.getNDelay());
-		index+=Utility.floatTobyte(b, index, this.opPara2.getFValue());
-		index+=Utility.intTobyte(b, index,Utility.getStringGBKLen(this.opPara2.getSZValue()));
+		index+=Utility.doubleTobyte(b, index, this.opPara2.getFValue());
+		index+=Utility.intTobyte(b, index,Utility.getStringGB18030Len(this.opPara2.getSZValue()));
 		index+=Utility.strTobytePA(b, index, this.opPara2.getSZValue());
-		/*if(Utility.getStringGBKLen(this.opPara2.getSZValue())>0){
+		/*if(Utility.getStringGB18030Len(this.opPara2.getSZValue())>0){
 			index+=1;
 			b[index]=0x00;
 		}*/
@@ -116,8 +116,8 @@ public class PAOperationRequest extends PABase {
 		index+=4;
 		this.opPara1.setNDelay(Utility.byteToint(b, index));
 		index+=4;
-		this.opPara1.setFValue(Utility.byteTofloat(b, index));
-		index+=4;
+		this.opPara1.setFValue(Utility.byteTodouble(b, index));
+		index+=8;
 		len=Utility.byteToint(b, index);
 		index+=4;
 		this.opPara1.setSZValue(Utility.byteToStrPA(b, len, index));
@@ -130,8 +130,8 @@ public class PAOperationRequest extends PABase {
 		index+=4;
 		this.opPara2.setNDelay(Utility.byteToint(b, index));
 		index+=4;
-		this.opPara2.setFValue(Utility.byteTofloat(b, index));
-		index+=4;
+		this.opPara2.setFValue(Utility.byteTodouble(b, index));
+		index+=8;
 		len=Utility.byteToint(b, index);
 		index+=4;
 		this.opPara2.setSZValue(Utility.byteToStrPA(b, len, index));

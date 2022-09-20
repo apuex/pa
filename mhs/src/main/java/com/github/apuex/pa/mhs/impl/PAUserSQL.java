@@ -4,7 +4,10 @@ import com.github.apuex.pa.mhs.PABase;
 import com.github.apuex.pa.mhs.PAMessage;
 import com.github.apuex.pa.utility.Utility;
 
-public class PAUserSQL extends PABase {
+import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
+
+public class PAUserSQL implements PABase {
     private int priority;
     private short type;
     private short version;
@@ -17,15 +20,16 @@ public class PAUserSQL extends PABase {
     }
 
     public void byteToClass(byte b[]){
-        int index=2;
-        this.version=Utility.byteToshort(b, index);
-        index+=2;
-        int sqlLen=Utility.byteToint(b, index);
-        index+=4;
-        this.sql=Utility.byteToStrPA(b, sqlLen, index);
-        if(sqlLen>0){
-            index+=(sqlLen+1);
-        }
+        ByteBuffer bf = ByteBuffer
+            .wrap(b)
+            .order(ByteOrder.LITTLE_ENDIAN);
+        short inputType = bf.getShort(); // skip type
+        this.version=bf.getShort();
+        final int sqlLen=bf.getInt();
+        byte[] sqlBytes = new byte[sqlLen];
+        bf.get(sqlBytes);
+        this.sql=Utility.gb18030ByteToStr(sqlBytes);
+        if(0 < sqlLen) bf.get(); // skip null terminator
     }
     public String getSQL() {
         return this.sql;
@@ -33,13 +37,15 @@ public class PAUserSQL extends PABase {
     public void setSQL(String sql) {
         this.sql=sql;
     }
+
     private int getClassLen(){
         int len=0;
         len+=2;//type
         len+=2;//version
         len+=4;//sql len
-        len+=Utility.getStringGBKLen(this.sql);
-        if(Utility.getStringGBKLen(this.sql)>0){
+        final int sqlLen =Utility.getStringGB18030Len(this.sql);
+        len+=sqlLen;
+        if(sqlLen >0){
             len+=1;
         }
         return len;
@@ -47,11 +53,15 @@ public class PAUserSQL extends PABase {
     public byte [] classToByte(){
         int len=0;
         byte b[]=new byte[getClassLen()];
-        int index=0;
-        index+=Utility.shortTobyte(b, index, this.type);
-        index+=Utility.shortTobyte(b, index, this.version);
-        index+=Utility.intTobyte(b, index,Utility.getStringGBKLen(this.sql));
-        index+=Utility.strTobytePA(b, index, this.sql);
+        ByteBuffer bf = ByteBuffer
+            .wrap(b)
+            .order(ByteOrder.LITTLE_ENDIAN);
+        bf.putShort(this.type);
+        bf.putShort(this.version);
+        byte[] sqlBytes = Utility.strToGB18030Byte(this.sql);
+        bf.putInt(sqlBytes.length);
+        bf.put(sqlBytes);
+        if(0 < sqlBytes.length) bf.put((byte)0);
         return b;
     }
     public short getType() {

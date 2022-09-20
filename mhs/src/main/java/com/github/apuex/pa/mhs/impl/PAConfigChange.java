@@ -3,7 +3,7 @@ import com.github.apuex.pa.mhs.PABase;
 import com.github.apuex.pa.mhs.PAMessage;
 import com.github.apuex.pa.utility.Utility;
 
-public class PAConfigChange extends PABase {
+public class PAConfigChange implements PABase {
 	private int priority;//
 	private short type;//2
 	private short version;//2

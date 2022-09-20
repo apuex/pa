@@ -6,7 +6,7 @@ import com.github.apuex.pa.mhs.PABase;
 import com.github.apuex.pa.mhs.PAMessage;
 import com.github.apuex.pa.utility.Utility;
 
-public class PAAlarm extends PABase {
+public class PAAlarm implements PABase {
 	private int priority;//
 	private short type;//2
 	private short version;//2
@@ -16,7 +16,7 @@ public class PAAlarm extends PABase {
 	private long  tRiseTime;
 	private int	    nState;
 	private int	bDIValue;
-	private float  fValue;
+	private double  fValue;
 	private String szValue;
 	private String szDataObjectName;
 	private String szDeviceName;
@@ -31,7 +31,7 @@ public class PAAlarm extends PABase {
 	private long tEndTime;
 	private int		nACK;
 	private int		bRepair;
-	private int	tconf_time;
+	private long tconf_time;
 	private String strUsername;
 	private int  dwUserID;
 	private int  dwMessageStatus;
@@ -100,7 +100,7 @@ public class PAAlarm extends PABase {
 	public int getDIValue(){
 		return this.bDIValue;
 	}
-	public float getFValue(){
+	public double getFValue(){
 		return this.fValue;
 	}
 	public String getSValue(){
@@ -184,14 +184,14 @@ public class PAAlarm extends PABase {
 		}
 		this.nDataType=Utility.byteToint(b, index);
 		index+=4;
-		this.tRiseTime=Utility.byteToint(b, index);
-		index+=4;
+		this.tRiseTime=Utility.byteToTime(b, index);
+		index+=8;
 		this.nState=Utility.byteToint(b, index);
 		index+=4;
 		this.bDIValue=Utility.byteToint(b, index);
 		index+=4;
-		this.fValue=Utility.byteTofloat(b, index);
-		index+=4;
+		this.fValue=Utility.byteTodouble(b, index);
+		index+=8;
 		len=Utility.byteToint(b, index);
 		index+=4;
 		this.szValue=Utility.byteToStrPA(b, len, index);
@@ -202,10 +202,10 @@ public class PAAlarm extends PABase {
 		index+=4;
 		for(int i=0;i<count;i++){
 			AIHistoryValue aihis=new AIHistoryValue();
-			aihis.setTime(Utility.byteToint(b, index));
-			index+=4;
-			aihis.setFValue(Utility.byteTofloat(b, index));
-			index+=4;
+			aihis.setTime(Utility.byteToTime(b, index));
+			index+=8;
+			aihis.setFValue(Utility.byteTodouble(b, index));
+			index+=8;
 			aAIHistoryValue.add(aihis);
 		}
 		len=Utility.byteToint(b, index);
@@ -262,8 +262,8 @@ public class PAAlarm extends PABase {
 			index+=(len+1);
 		}
 		
-		this.tEndTime=Utility.byteToint(b, index);
-		index+=4;
+		this.tEndTime=Utility.byteToTime(b, index);
+		index+=8;
 		
 		this.nACK=Utility.byteToint(b, index);
 		index+=4;
@@ -271,8 +271,8 @@ public class PAAlarm extends PABase {
 		this.bRepair=Utility.byteToint(b, index);
 		index+=4;
 		
-		this.tconf_time=Utility.byteToint(b, index);
-		index+=4;
+		this.tconf_time=Utility.byteToTime(b, index);
+		index+=8;
 		
 		len=Utility.byteToint(b, index);
 		index+=4;
@@ -291,71 +291,69 @@ public class PAAlarm extends PABase {
 		int len=0;
 		len+=2;//type
 		len+=2;//version
-		len+=4;//id
-		len+=4;//id
-		//System.out.println(Utility.getStringGBKLen(this.strIDList));
-		len+=Utility.getStringGBKLen(this.strIDList);
-		if(Utility.getStringGBKLen(this.strIDList)>0){
+		len+=4;//m_dwID
+		len+=4;
+		len+=Utility.getStringGB18030Len(this.strIDList);
+		if(Utility.getStringGB18030Len(this.strIDList)>0){
+			len+=1;
+		}
+		len+=4; // data type
+		len+=8; // rise time
+		len+=4; // state
+		len+=4; // di value
+		len+=8; // ai value
+		len+=4;
+		len+=Utility.getStringGB18030Len(this.szValue);
+		if(Utility.getStringGB18030Len(this.szValue)>0){
+			len+=1;
+		}
+		len+=4; // ai count
+		len+=aAIHistoryValue.size()*16;
+		len+=4;
+		len+=Utility.getStringGB18030Len(this.szDataObjectName);
+		if(Utility.getStringGB18030Len(this.szDataObjectName)>0){
 			len+=1;
 		}
 		len+=4;
+		len+=Utility.getStringGB18030Len(this.szDeviceName);
+		if(Utility.getStringGB18030Len(this.szDeviceName)>0){
+			len+=1;
+		}
+		len+=4; // m_nDeviceType
 		len+=4;
-		len+=4;
-		len+=4;
-		len+=4;
-		len+=4;
-		len+=4;
-		len+=Utility.getStringGBKLen(this.szValue);
-		if(Utility.getStringGBKLen(this.szValue)>0){
+		len+=Utility.getStringGB18030Len(this.szStation);
+		if(Utility.getStringGB18030Len(this.szStation)>0){
 			len+=1;
 		}
 		len+=4;
-		len+=aAIHistoryValue.size()*8;
-		len+=4;
-		len+=Utility.getStringGBKLen(this.szDataObjectName);
-		if(Utility.getStringGBKLen(this.szDataObjectName)>0){
+		len+=Utility.getStringGB18030Len(this.strStationNo);
+		if(Utility.getStringGB18030Len(this.strStationNo)>0){
 			len+=1;
 		}
 		len+=4;
-		len+=Utility.getStringGBKLen(this.szDeviceName);
-		if(Utility.getStringGBKLen(this.szDeviceName)>0){
+		len+=Utility.getStringGB18030Len(this.szNote);
+		if(Utility.getStringGB18030Len(this.szNote)>0){
 			len+=1;
 		}
+		len+=4; //m_bRise
+		len+=4; //m_tLasting
+		len+=4; //m_dwAlarmLevel
 		len+=4;
-		len+=4;
-		len+=Utility.getStringGBKLen(this.szStation);
-		if(Utility.getStringGBKLen(this.szStation)>0){
+		len+=Utility.getStringGB18030Len(this.szMeasureMonad);
+		if(Utility.getStringGB18030Len(this.szMeasureMonad)>0){
 			len+=1;
 		}
+		len+=8; // m_tEndTime
+		len+=4; // m_nAck
+		len+=4; // bRepair
+		len+=8; // conf time
 		len+=4;
-		len+=Utility.getStringGBKLen(this.strStationNo);
-		if(Utility.getStringGBKLen(this.strStationNo)>0){
+		len+=Utility.getStringGB18030Len(this.strUsername);
+		if(Utility.getStringGB18030Len(this.strUsername)>0){
 			len+=1;
 		}
-		len+=4;
-		len+=Utility.getStringGBKLen(this.szNote);
-		if(Utility.getStringGBKLen(this.szNote)>0){
-			len+=1;
-		}
-		len+=4;
-		len+=4;
-		len+=4;
-		len+=4;
-		len+=Utility.getStringGBKLen(this.szMeasureMonad);
-		if(Utility.getStringGBKLen(this.szMeasureMonad)>0){
-			len+=1;
-		}
-		len+=4;
-		len+=4;
-		len+=4;
-		len+=4;
-		len+=4;
-		len+=Utility.getStringGBKLen(this.strUsername);
-		if(Utility.getStringGBKLen(this.strUsername)>0){
-			len+=1;
-		}
-		len+=4;
-		len+=4;
+		len+=4; // user id
+		len+=4; // message status
 		return len;
 	}
 	public byte [] classToByte(){
@@ -364,44 +362,44 @@ public class PAAlarm extends PABase {
 		index+=Utility.shortTobyte(b, index, this.type);
 		index+=Utility.shortTobyte(b, index, this.version);
 		index+=Utility.intTobyte(b, index, this.dwID);
-		index+=Utility.intTobyte(b, index,Utility.getStringGBKLen(this.strIDList));
+		index+=Utility.intTobyte(b, index,Utility.getStringGB18030Len(this.strIDList));
 		index+=Utility.strTobytePA(b, index, this.strIDList);
 		index+=Utility.intTobyte(b, index, this.nDataType);
-		index+=Utility.longTobyte(b, index, this.tRiseTime);
+		index+=Utility.timeToByte(b, index, this.tRiseTime);
 		index+=Utility.intTobyte(b, index, this.nState);
 		index+=Utility.intTobyte(b, index, this.bDIValue);
-		index+=Utility.floatTobyte(b, index, this.fValue);
-		index+=Utility.intTobyte(b, index,Utility.getStringGBKLen(this.szValue));
+		index+=Utility.doubleTobyte(b, index, this.fValue);
+		index+=Utility.intTobyte(b, index,Utility.getStringGB18030Len(this.szValue));
 		index+=Utility.strTobytePA(b, index, this.szValue);
 		index+=Utility.intTobyte(b, index, aAIHistoryValue.size());
 		for(int i=0;i<aAIHistoryValue.size();i++){
 			AIHistoryValue his=aAIHistoryValue.get(i);
-			index+=Utility.intTobyte(b, index,his.getTime());
-			index+=Utility.floatTobyte(b, index,his.getFValue());
+			index+=Utility.timeToByte(b, index,his.getTime());
+			index+=Utility.doubleTobyte(b, index,his.getFValue());
 		}
-		index+=Utility.intTobyte(b, index,Utility.getStringGBKLen(this.szDataObjectName));
+		index+=Utility.intTobyte(b, index,Utility.getStringGB18030Len(this.szDataObjectName));
 		index+=Utility.strTobytePA(b, index, this.szDataObjectName);
-		index+=Utility.intTobyte(b, index,Utility.getStringGBKLen(this.szDeviceName));
+		index+=Utility.intTobyte(b, index,Utility.getStringGB18030Len(this.szDeviceName));
 		index+=Utility.strTobytePA(b, index, this.szDeviceName);
 		index+=Utility.intTobyte(b, index,this.nDeviceType);
 		
-		index+=Utility.intTobyte(b, index,Utility.getStringGBKLen(this.szStation));
+		index+=Utility.intTobyte(b, index,Utility.getStringGB18030Len(this.szStation));
 		index+=Utility.strTobytePA(b, index, this.szStation);
-		index+=Utility.intTobyte(b, index,Utility.getStringGBKLen(this.strStationNo));
+		index+=Utility.intTobyte(b, index,Utility.getStringGB18030Len(this.strStationNo));
 		index+=Utility.strTobytePA(b, index, this.strStationNo);
 		
-		index+=Utility.intTobyte(b, index,Utility.getStringGBKLen(this.szNote));
+		index+=Utility.intTobyte(b, index,Utility.getStringGB18030Len(this.szNote));
 		index+=Utility.strTobytePA(b, index, this.szNote);
 		index+=Utility.intTobyte(b, index,this.bRise);
 		index+=Utility.intTobyte(b, index,this.tLasting);
 		index+=Utility.intTobyte(b, index,this.dwAlarmLevel);
-		index+=Utility.intTobyte(b, index,Utility.getStringGBKLen(this.szMeasureMonad));
+		index+=Utility.intTobyte(b, index,Utility.getStringGB18030Len(this.szMeasureMonad));
 		index+=Utility.strTobytePA(b, index, this.szMeasureMonad);
-		index+=Utility.longTobyte(b, index,this.tEndTime);
+		index+=Utility.timeToByte(b, index,this.tEndTime);
 		index+=Utility.intTobyte(b, index,this.nACK);
 		index+=Utility.intTobyte(b, index,this.bRepair);
-		index+=Utility.intTobyte(b, index,this.tconf_time);
-		index+=Utility.intTobyte(b, index,Utility.getStringGBKLen(this.strUsername));
+		index+=Utility.timeToByte(b, index,this.tconf_time);
+		index+=Utility.intTobyte(b, index,Utility.getStringGB18030Len(this.strUsername));
 		index+=Utility.strTobytePA(b, index, this.strUsername);
 		index+=Utility.intTobyte(b, index,this.dwUserID);
 		index+=Utility.intTobyte(b, index,this.dwMessageStatus);
@@ -426,7 +424,7 @@ public class PAAlarm extends PABase {
 	public void setDIValue(int bDIValue){
 		this.bDIValue=bDIValue;
 	}
-	public void setFValue(float fValue){
+	public void setFValue(double fValue){
 		this.fValue=fValue;
 	}
 	public void setSValue(String szValue){
@@ -473,7 +471,7 @@ public class PAAlarm extends PABase {
 	public void setRepair(int bRepair){
 		this.bRepair=bRepair;
 	}
-	public void setConfTime(int tconf_time){
+	public void setConfTime(long tconf_time){
 		this.tconf_time=tconf_time;
 	}
 	
@@ -486,7 +484,7 @@ public class PAAlarm extends PABase {
 	public void setMessageStatus(int dwMessageStatus){
 		this.dwMessageStatus=dwMessageStatus;
 	}
-	public void addAIHistoryValue(float fValue,int tTime){
+	public void addAIHistoryValue(double fValue,long tTime){
 		AIHistoryValue his=new AIHistoryValue();
 		his.setFValue(fValue);
 		his.setTime(tTime);

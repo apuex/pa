@@ -9,7 +9,7 @@ import com.github.apuex.pa.mhs.PABase;
 import com.github.apuex.pa.mhs.PAMessage;
 import com.github.apuex.pa.utility.Utility;
 
-public class PADataRespond extends PABase {
+public class PADataRespond implements PABase {
 	private int priority;
 	private short type;
 	private short version;
@@ -86,8 +86,8 @@ public class PADataRespond extends PABase {
 					index+=4;
 					dat.setState(Utility.byteToint(b, index));
 					index+=4;
-					dat.setFValue(Utility.byteTofloat(b, index));
-					index+=4;
+					dat.setFValue(Utility.byteTodouble(b, index));
+					index+=8;
 					dat.setIValue(Utility.byteToint(b, index));
 					index+=4;
 					
@@ -127,11 +127,11 @@ public class PADataRespond extends PABase {
 		for(Integer key:map.keySet()){
 			PADataObject dat=map.get(key);
 			len+=(4*9);
-			temp=Utility.getStringGBKLen(dat.getSValue());
+			temp=Utility.getStringGB18030Len(dat.getSValue());
 			if(temp>0){
 				len+=temp+1;
 			}
-			temp=Utility.getStringGBKLen(dat.getDesc());
+			temp=Utility.getStringGB18030Len(dat.getDesc());
 			if(temp>0){
 				len+=temp+1;
 			}
@@ -153,19 +153,26 @@ public class PADataRespond extends PABase {
 			index+=Utility.intTobyte(b, index, dat.getId());
 			index+=Utility.intTobyte(b, index, dat.getValueType());
 			index+=Utility.intTobyte(b, index, dat.getState());
-			index+=Utility.floatTobyte(b, index, dat.getFValue());
+			index+=Utility.doubleTobyte(b, index, dat.getFValue());
 			index+=Utility.intTobyte(b, index, dat.getIValue());
-			index+=Utility.intTobyte(b, index, Utility.getStringGBKLen(dat.getSValue()));
+			index+=Utility.intTobyte(b, index, Utility.getStringGB18030Len(dat.getSValue()));
 			index+=Utility.strTobytePA(b, index, dat.getSValue());
 			index+=Utility.intTobyte(b, index, dat.getValid());
-			index+=Utility.intTobyte(b, index, Utility.getStringGBKLen(dat.getDesc()));
+			index+=Utility.intTobyte(b, index, Utility.getStringGB18030Len(dat.getDesc()));
 			index+=Utility.strTobytePA(b, index, dat.getDesc());
 		}
 		return b;
 	}
+	@Override
 	public short getType() {
 		return this.type;
 	}
+
+	@Override
+	public short getVersion() {
+		return 0;
+	}
+
 	public int getPriority() {
 		return this.priority;
 	}

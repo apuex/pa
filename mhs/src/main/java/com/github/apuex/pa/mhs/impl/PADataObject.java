@@ -8,7 +8,7 @@ public class PADataObject {
 	private int dwOid;//对应系统中的数据ID,由发送原语者从其他地方获取
 	private int nValueType;//0表示输出类型,1表示DI类型,2表示浮点类型,3表示SI类型
 	private int nState;//对应系统中的数据对象状态
-	private float fValue;//浮点数值
+	private double fValue;//浮点数值
 	private int iValue;//整数量值
 	private String szValue;//字符串值
 	private int bValid;//是否有效
@@ -55,10 +55,10 @@ public class PADataObject {
 	public void setState(int nState){
 		this.nState=nState;
 	}
-	public float getFValue(){
+	public double getFValue(){
 		return this.fValue;
 	}
-	public void setFValue(float fValue){
+	public void setFValue(double fValue){
 		this.fValue=fValue;
 	}
 	public int getIValue(){
