@@ -42,6 +42,7 @@ public class PAAlarm implements PABase {
 		version=PAMessage.VERSION;
 		tRiseTime=0;
 		dwID		= 0;
+		strIDList	= "";
 		nDataType		= -1;
 		nState	= -1;
 		bDIValue = 0;
@@ -52,6 +53,7 @@ public class PAAlarm implements PABase {
 		bRise		= 1;
 		tLasting	= 0;
 		dwAlarmLevel = -1;
+		szMeasureMonad = "";
 		szStation = "";
 		strStationNo = "";
 		szDataObjectName = "";
@@ -139,11 +141,11 @@ public class PAAlarm implements PABase {
 		return this.szMeasureMonad;
 	}
 	public String getEndTim(){
-		String time=Utility.getLocalFormatTime();
-		if(tEndTime>1400000){
+		String time = "";
+		if(tEndTime > 0 ){
 			time=Utility.getFormatTime((int)tEndTime);
 		}
-        return time;
+    return time;
 	}
 	public int getACK(){
 		return this.nACK;
@@ -152,11 +154,11 @@ public class PAAlarm implements PABase {
 		return this.bRepair;
 	}
 	public String getConfTime(){
-		String time=Utility.getLocalFormatTime();
-		if(tconf_time>1400000){
-	        time=Utility.getFormatTime((int)tconf_time);
+		String time = "";
+		if(tEndTime > 0 ){
+			time=Utility.getFormatTime((int)tEndTime);
 		}
-        return time;
+		return time;
 	}
 	
 	public String getUsername(){
